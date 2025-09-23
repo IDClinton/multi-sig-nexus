@@ -1,12 +1,14 @@
-import { Shield, Menu } from 'lucide-react';
+import { Shield, Menu, ChevronDown } from 'lucide-react';
 import { WalletConnection } from '@/components/WalletConnection';
 import { EnhancedButton } from '@/components/ui/enhanced-button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard' },
-  { name: 'Transactions', href: '/transactions' },
+  { name: 'My Wallets', href: '/my-wallets' },
+  { name: 'Settings', href: '/settings' },
 ];
 
 export const Header = () => {
@@ -26,7 +28,7 @@ export const Header = () => {
             </span>
           </Link>
 
-          {/* Navigation */}
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             {navigation.map((item) => (
               <Link
@@ -44,16 +46,58 @@ export const Header = () => {
             ))}
           </nav>
 
-          {/* Wallet Connection */}
+          {/* Right side */}
           <div className="flex items-center gap-4">
             <WalletConnection />
-            <EnhancedButton
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-            >
-              <Menu className="h-5 w-5" />
-            </EnhancedButton>
+            
+            {/* Mobile Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <EnhancedButton variant="ghost" size="icon" className="md:hidden">
+                  <Menu className="h-5 w-5" />
+                </EnhancedButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 bg-card border-border shadow-intense">
+                {navigation.map((item) => (
+                  <DropdownMenuItem key={item.name} asChild>
+                    <Link
+                      to={item.href}
+                      className={cn(
+                        "cursor-pointer",
+                        location.pathname === item.href && "text-primary"
+                      )}
+                    >
+                      {item.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Desktop Menu Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <EnhancedButton variant="ghost" className="hidden md:flex gap-1">
+                  <Menu className="h-4 w-4" />
+                  <ChevronDown className="h-3 w-3" />
+                </EnhancedButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 bg-card border-border shadow-intense">
+                {navigation.map((item) => (
+                  <DropdownMenuItem key={item.name} asChild>
+                    <Link
+                      to={item.href}
+                      className={cn(
+                        "cursor-pointer",
+                        location.pathname === item.href && "text-primary"
+                      )}
+                    >
+                      {item.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
